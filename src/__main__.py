@@ -2,6 +2,7 @@
 
 import sys
 
+
 from PyQt5.QtWidgets import QApplication
 from widgets.MainApplication import MainWindow
 
