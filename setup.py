@@ -10,7 +10,7 @@ setup(name = 'fionaviewer',
       install_requires = ['numpy','matplotlib'],
       include_package_data = True,
       zip_safe = False
-      url = 'http://github.com/jtcanty/py-fionaviewer
+      url = 'http://github.com/jtcanty/py-fionaviewer'
 
       classifiers = ['Development Status :: 2 - Pre-Alpha',
                      'Environment :: X11 Applications :: Qt',
