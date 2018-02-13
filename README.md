@@ -1,2 +1,2 @@
 # py-fionaviewer
-A PyQt application for analyzing single molecule time-series data.
+A PyQt application for analyzing noisy single-molecule time-series data.
