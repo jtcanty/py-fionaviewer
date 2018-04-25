@@ -2,19 +2,16 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from PyQt5.QtWidgets import QWidget, QCheckBox, QApplication, QMainWindow
-from PyQt5.QtCore import Qt
-import pyqtgraph as pg
-
-import pyqtgraph.parametertree.parameterTypes as pTypes
-from pyqtgraph.parametertree import Parameter, ParameterTree, ParameterItem, registerParameterType
-
-import pyqtgraph.console
-
-
 import numpy as np
 
+from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt5.QtCore import Qt
+
+import pyqtgraph as pg
 from pyqtgraph.dockarea import *
+
+from fionaviewer import parameters
+
 
 class MainWindow(QMainWindow):
 
@@ -57,11 +54,19 @@ class MainWindow(QMainWindow):
         w3 = pg.FileDialog()
         self.d3.addWidget(w3)
                            
-        w4 = ParameterTree()
+        w4 = Parameters()
+        w4.setParameters(w4.p, showTop=False)
         self.d4.addWidget(w4)
                        
         w5 = pg.console.ConsoleWidget()
         self.d5.addWidget(w5)
+        
+    def FileDialog(self):
+        fname = FileDialog.getOpenFileName(self, 'Open file', '/home')
+
+        with open(fname,'r') as f:
+            data = print(f.read())
+            
         
         
 if __name__ == '__main__':
