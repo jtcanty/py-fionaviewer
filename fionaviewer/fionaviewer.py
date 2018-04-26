@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import sys
 import numpy as np
 
 from PyQt5.QtWidgets import QApplication, QMainWindow
@@ -10,7 +9,7 @@ from PyQt5.QtCore import Qt
 import pyqtgraph as pg
 from pyqtgraph.dockarea import *
 
-from fionaviewer import parameters
+from parameters import Parameters
 
 
 class MainWindow(QMainWindow):
@@ -56,6 +55,7 @@ class MainWindow(QMainWindow):
                            
         w4 = Parameters()
         w4.setParameters(w4.p, showTop=False)
+        w4.setWindowTitle('Parameters')
         self.d4.addWidget(w4)
                        
         w5 = pg.console.ConsoleWidget()
@@ -69,8 +69,3 @@ class MainWindow(QMainWindow):
             
         
         
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    win = MainWindow()
-    win.show()
-    sys.exit(app.exec_())
