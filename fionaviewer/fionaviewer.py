@@ -2,14 +2,17 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
+import pyqtgraph
 
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtCore import Qt
 
-import pyqtgraph as pg
+from pyqtgraph import PlotWidget
 from pyqtgraph.dockarea import *
 
+from plotter import Plotter
 from parameters import Parameters
+from filebrowser import FileBrowser
 
 
 class MainWindow(QMainWindow):
@@ -21,51 +24,52 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.area)
         self.resize(1000,500)
         self.setWindowTitle('Fionaviewer')      
-        pg.setConfigOption('background', 'w')
+        pyqtgraph.setConfigOption('background', 'w')
         
+        menu = self.menuBar().addMenu('File')
         self.createDocks()
         self.addWidgets()
-        
+
     def createDocks(self):
         '''Create docks'''   
-        self.d1 = Dock('Dock1 (tabbed) - Plot', size=(500,200))
-        self.d2 = Dock('Dock2 (tabbed) - Plot', size=(500,200))
-        self.d3 = Dock('Dock3 - File Dialog', size=(100,100))
-        self.d4 = Dock('Dock4 - Parameters', size=(100,100))
-        self.d5 = Dock('Dock5 - Console', size=(100,100))
+        self.dock_plot = Dock('Plot (tabbed)')
+        self.dock_plot_selection = Dock('Plot Selection (tabbed)')
+        self.dock_file_browser = Dock('File Dialog')
+        self.dock_parameters = Dock('Parameters')
+        self.dock_console = Dock('Console')
         
-        self.area.addDock(self.d1, 'right')
-        self.area.addDock(self.d2, 'left') 
-        self.area.addDock(self.d3, 'top')
-        self.area.addDock(self.d4, 'bottom')
-        self.area.addDock(self.d5, 'bottom', self.d4)
+        self.area.addDock(self.dock_plot, 'right')
+        self.area.addDock(self.dock_plot_selection, 'left') 
+        self.area.addDock(self.dock_file_browser, 'top')
+        self.area.addDock(self.dock_parameters, 'left')
+        self.area.addDock(self.dock_console, 'bottom')
         
     def addWidgets(self):
-        '''Add widgets to docks'''
-        w1 = pg.PlotWidget(title='Dock 1 plot')
-        w1.plot(np.random.normal(size=100))
-        self.d1.addWidget(w1)
+        '''Create widgets and add them to docks'''
+        self.plot = PlotWidget(title='Plot')
+        self.plot.plot(np.random.normal(size=100))
+        self.dock_plot.addWidget(self.plot)
 
-        w2 = pg.PlotWidget(title='Dock 2 plot')
-        w2.plot(np.random.normal(size=100))
-        self.d2.addWidget(w2)
+        self.plot_selection = PlotWidget(title='Plot Selection')
+        self.plot_selection.plot(np.random.normal(size=100))
+        self.dock_plot_selection.addWidget(self.plot_selection)
         
-        w3 = pg.FileDialog()
-        self.d3.addWidget(w3)
+        self.file_browser = FileBrowser()
+        self.dock_file_browser.addWidget(self.file_browser)
                            
-        w4 = Parameters()
-        w4.setParameters(w4.p, showTop=False)
-        w4.setWindowTitle('Parameters')
-        self.d4.addWidget(w4)
+        self.parameters = Parameters()
+        self.parameters.setWindowTitle('Parameters')
+        self.parameters.setParameters(self.parameters.p, showTop=False)
+        self.dock_parameters.addWidget(self.parameters)
                        
-        w5 = pg.console.ConsoleWidget()
-        self.d5.addWidget(w5)
+        #widget_console = pg.console.ConsoleWidget()
+        #self.dock_console.addWidget(widget_console)
         
-    def FileDialog(self):
-        fname = FileDialog.getOpenFileName(self, 'Open file', '/home')
-
-        with open(fname,'r') as f:
-            data = print(f.read())
+    def connectSignalstoSlots(self):
+        self.file_browser.connect(self.plot.plot)
+        
+        
+    
             
         
         
