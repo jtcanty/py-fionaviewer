@@ -10,6 +10,7 @@ class Plotter(pg.PlotWidget):
         
         
     def handleDataChanged(self):
+        print('good')
         
         
     

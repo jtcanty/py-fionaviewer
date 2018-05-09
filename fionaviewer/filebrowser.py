@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from pyqtgraph import FileDialog
+from pyqtgraph import QtGui
 
 
 class FileBrowser(FileDialog):

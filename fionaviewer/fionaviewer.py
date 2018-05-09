@@ -4,6 +4,7 @@
 import numpy as np
 import pyqtgraph
 
+from PyQt5 import QtGui, QtCore
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtCore import Qt
 
@@ -26,21 +27,21 @@ class MainWindow(QMainWindow):
         self.setWindowTitle('Fionaviewer')      
         pyqtgraph.setConfigOption('background', 'w')
         
-        menu = self.menuBar().addMenu('File')
         self.createDocks()
         self.addWidgets()
+        
+        self.file_browser = FileBrowser()
+        self.createMenu()   
 
     def createDocks(self):
         '''Create docks'''   
         self.dock_plot = Dock('Plot (tabbed)')
         self.dock_plot_selection = Dock('Plot Selection (tabbed)')
-        self.dock_file_browser = Dock('File Dialog')
         self.dock_parameters = Dock('Parameters')
         self.dock_console = Dock('Console')
         
         self.area.addDock(self.dock_plot, 'right')
         self.area.addDock(self.dock_plot_selection, 'left') 
-        self.area.addDock(self.dock_file_browser, 'top')
         self.area.addDock(self.dock_parameters, 'left')
         self.area.addDock(self.dock_console, 'bottom')
         
@@ -53,9 +54,6 @@ class MainWindow(QMainWindow):
         self.plot_selection = PlotWidget(title='Plot Selection')
         self.plot_selection.plot(np.random.normal(size=100))
         self.dock_plot_selection.addWidget(self.plot_selection)
-        
-        self.file_browser = FileBrowser()
-        self.dock_file_browser.addWidget(self.file_browser)
                            
         self.parameters = Parameters()
         self.parameters.setWindowTitle('Parameters')
@@ -65,6 +63,17 @@ class MainWindow(QMainWindow):
         #widget_console = pg.console.ConsoleWidget()
         #self.dock_console.addWidget(widget_console)
         
+    def createMenu(self):
+        openAction = QtGui.QAction('Open', self)
+        openAction.setShortcut('Ctrl+O')
+        openAction.triggered.connect(self.file_browser.getOpenFile)
+        
+        menubar = self.menuBar()
+        filemenu = menubar.addMenu('File')
+        filemenu.addAction(openAction)
+        
+        
+
     def connectSignalstoSlots(self):
         self.file_browser.connect(self.plot.plot)
         
