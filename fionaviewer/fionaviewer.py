@@ -68,14 +68,23 @@ class MainWindow(QMainWindow):
         openAction.setShortcut('Ctrl+O')
         openAction.triggered.connect(self.file_browser.getOpenFile)
         
+        newAction = QtGui.QAction('New', self)
+        newAction.setShortcut('Ctrl+N')
+        newAction.triggered.connect(self.file_browser.getNewFile)
+        
+        exitAction = QtGui.QAction('Exit', self)
+        exitAction.setShortcut('Ctrl+Q')
+        #exitAction.triggered.connect(self.
+        
         menubar = self.menuBar()
         filemenu = menubar.addMenu('File')
         filemenu.addAction(openAction)
-        
-        
+        filemenu.addAction(newAction)
+        filemenu.addAction(exitAction)
+             
 
     def connectSignalstoSlots(self):
-        self.file_browser.connect(self.plot.plot)
+        self.file_browser.dataChanged.connect(self.plot.plot)
         
         
     
