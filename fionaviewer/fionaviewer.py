@@ -27,10 +27,10 @@ class MainWindow(QMainWindow):
         self.setWindowTitle('Fionaviewer')      
         pyqtgraph.setConfigOption('background', 'w')
         
+        self.file_browser = FileBrowser()
+        
         self.createDocks()
         self.addWidgets()
-        
-        self.file_browser = FileBrowser()
         self.createMenu()   
 
     def createDocks(self):
@@ -47,11 +47,11 @@ class MainWindow(QMainWindow):
         
     def addWidgets(self):
         '''Create widgets and add them to docks'''
-        self.plot = PlotWidget(title='Plot')
-        self.plot.plot(np.random.normal(size=100))
-        self.dock_plot.addWidget(self.plot)
+        self.plotter = Plotter(self.file_browser)
+        self.plotter.plot(np.random.normal(size=100))
+        self.dock_plot.addWidget(self.plotter)
 
-        self.plot_selection = PlotWidget(title='Plot Selection')
+        self.plot_selection = Plotter(self.file_browser)
         self.plot_selection.plot(np.random.normal(size=100))
         self.dock_plot_selection.addWidget(self.plot_selection)
                            
@@ -83,8 +83,6 @@ class MainWindow(QMainWindow):
         filemenu.addAction(exitAction)
              
 
-    def connectSignalstoSlots(self):
-        self.file_browser.dataChanged.connect(self.plot.plot)
         
         
     

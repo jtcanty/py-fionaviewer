@@ -1,16 +1,22 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import pyqtgraph as pg
+from pyqtgraph import PlotWidget
 
-class Plotter(pg.PlotWidget):
-    
-    def __init__(self):
-        super(Plotter, self).__init__()
+class Plotter(PlotWidget):
+    '''Widget for plotting data'''
+    def __init__(self, filebrowser):
+        PlotWidget.__init__(self)
         
+        self.pData = self.plot()
+        self.filebrowser = filebrowser
+        self.filebrowser.dataChanged.connect(self.handleDataChanged)
         
-    def handleDataChanged(self):
-        print('good')
+    def handleDataChanged(self, data):
+        self.pData.setData(data)
+
+        
+           
         
         
     
