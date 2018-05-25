@@ -10,14 +10,25 @@ class FileBrowser(QtCore.QObject):
     
     def __init__(self):
         QtCore.QObject.__init__(self)
-        self.file_dialog = FileDialog()     
-        
+        self.file_dialog = FileDialog()           
         
     def getOpenFile(self):      
-        fname, _filter =self.file_dialog.getOpenFileName(None, 'Open file', 'c:\\',"Text files (*.txt)")
+        fname, _filter =self.file_dialog.getOpenFileName(None, 'Open file', 'c:\\',"Text files (*.txt);; MAT files (*.mat);;"
+                                                         "Excel files (*.csv, *.xls, *.xlsx)")
         with open(fname, 'r') as f:
-            data = f.readlines()
-            data = [int(line.strip()) for line in data]
+            if fname.endswith('.txt'):
+                data = f.readlines()
+                data = [int(line.strip()) for line in data]
+                
+            elif fname.endswith('.mat'):
+                
+                
+            elif fname.endswith(('.csv', '.xls', '.xlsx')):
+            
+            
+            else:
+                raise TypeError
+
  
         self.dataChanged.emit(data)
 

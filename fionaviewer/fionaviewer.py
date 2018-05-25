@@ -47,12 +47,12 @@ class MainWindow(QMainWindow):
         
     def addWidgets(self):
         '''Create widgets and add them to docks'''
-        self.plotter = Plotter(self.file_browser)
-        self.plotter.plot(np.random.normal(size=100))
+        data = np.random.normal(size=100)
+        
+        self.plotter = Plotter(self.file_browser, data)
         self.dock_plot.addWidget(self.plotter)
 
-        self.plot_selection = Plotter(self.file_browser)
-        self.plot_selection.plot(np.random.normal(size=100))
+        self.plot_selection = Plotter(self.file_browser, data)
         self.dock_plot_selection.addWidget(self.plot_selection)
                            
         self.parameters = Parameters()
