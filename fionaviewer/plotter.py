@@ -13,7 +13,7 @@ class Plotter(PlotWidget):
         
         self.label = pg.LabelItem(justify='right')
         self.data = data
-        self.plot(self.data)
+        self.pData = self.plot(self.data)
         self.filebrowser = filebrowser
         self.filebrowser.dataChanged.connect(self.handleDataChanged)
         
@@ -35,8 +35,8 @@ class Plotter(PlotWidget):
         #proxy = pg.SignalProxy(self.scene().sigMouseMoved, rateLimit=60, slot=self.mouseMoved())
         self.scene().sigMouseMoved.connect(self.mouseMoved)
     
-    def handleDataChanged(self, data):
-        self.pData.setData(data)
+    def handleDataChanged(self, xData, yData):
+        self.pData.setData(xData, yData)
         
     def updateRegion(self):
         self.region.setZValue(10)

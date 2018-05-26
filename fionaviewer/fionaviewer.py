@@ -66,7 +66,7 @@ class MainWindow(QMainWindow):
     def createMenu(self):
         openAction = QtGui.QAction('Open', self)
         openAction.setShortcut('Ctrl+O')
-        openAction.triggered.connect(self.file_browser.getOpenFile)
+        openAction.triggered.connect(self.file_browser.getFileName)
         
         newAction = QtGui.QAction('New', self)
         newAction.setShortcut('Ctrl+N')
