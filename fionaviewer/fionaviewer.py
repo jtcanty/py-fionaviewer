@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import sys
+
 import numpy as np
 import pyqtgraph
 
@@ -57,7 +59,7 @@ class MainWindow(QMainWindow):
                            
         self.parameters = Parameters()
         self.parameters.setWindowTitle('Parameters')
-        self.parameters.setParameters(self.parameters.p, showTop=False)
+        self.parameters.setParameters(self.parameters.parameterTree, showTop=False)
         self.dock_parameters.addWidget(self.parameters)
                        
         #widget_console = pg.console.ConsoleWidget()
@@ -72,15 +74,23 @@ class MainWindow(QMainWindow):
         newAction.setShortcut('Ctrl+N')
         newAction.triggered.connect(self.file_browser.getNewFile)
         
+        saveAction = QtGui.QAction('Save', self)
+        saveAction.setShortcut('Ctrl+S')
+        saveAction.triggered.connect(self.file_browser.saveNewFile)
+        
         exitAction = QtGui.QAction('Exit', self)
         exitAction.setShortcut('Ctrl+Q')
-        #exitAction.triggered.connect(self.
+        exitAction.triggered.connect(self.closeApplication)
         
         menubar = self.menuBar()
         filemenu = menubar.addMenu('File')
         filemenu.addAction(openAction)
         filemenu.addAction(newAction)
+        filemenu.addAction(saveAction)
         filemenu.addAction(exitAction)
+        
+    def closeApplication(self):
+        sys.exit()
              
 
         

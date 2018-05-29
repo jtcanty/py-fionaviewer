@@ -24,10 +24,10 @@ class Parameters(ParameterTree):
                 
         # Create tree of Parameter objects
         self.parameterTree = Parameter.create(name='params', type='group', children=self.params)
-        self.parameterTree.sigTreeStateChanged.connect(self.parameterChanged)
+        #self.parameterTree.sigTreeStateChanged.connect(self.parameterChanged)
         
      
-    #def parameterChanged(self, change):
+   # def parameterChanged(self, change):
         
         
         
