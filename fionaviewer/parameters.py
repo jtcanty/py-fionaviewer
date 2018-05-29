@@ -7,8 +7,9 @@ from pyqtgraph.parametertree import Parameter, ParameterTree, ParameterItem, reg
 class Parameters(ParameterTree):
     
     def __init__(self):
-        super(ParameterTree, self).__init__()
-        params = [
+        ParameterTree.__init__(self)
+        
+        self.params = [
             {'name':'Processing', 'type':'group', 'children':[
                 {'name':'Fit', 'type':'list', 'values':['SIC','Bayesian','Chi-Squared']},
                 {'name':'Filter', 'type':'list', 'values':['Decimate','Running Mean','L1 Piecewise-constant','Median','Butterworth']},
@@ -20,8 +21,14 @@ class Parameters(ParameterTree):
                 {'name':'Filter Order', 'type':'int', 'value':1}
             ]}
         ]
-        
-        
+                
         # Create tree of Parameter objects
-        self.p = Parameter.create(name='params', type='group', children=params)
+        self.parameterTree = Parameter.create(name='params', type='group', children=self.params)
+        self.parameterTree.sigTreeStateChanged.connect(self.parameterChanged)
+        
+     
+    #def parameterChanged(self, change):
+        
+        
+        
        

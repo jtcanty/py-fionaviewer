@@ -19,11 +19,11 @@ from filebrowser import FileBrowser
 class MainWindow(QMainWindow):
 
     def __init__(self):
-        super().__init__()
+        QMainWindow.__init__(self)
 
         self.area = DockArea()
         self.setCentralWidget(self.area)
-        self.resize(1000,500)
+        self.resize(1200,700)
         self.setWindowTitle('Fionaviewer')      
         pyqtgraph.setConfigOption('background', 'w')
         
@@ -35,13 +35,13 @@ class MainWindow(QMainWindow):
 
     def createDocks(self):
         '''Create docks'''   
-        self.dock_plot = Dock('Plot (tabbed)')
-        self.dock_plot_selection = Dock('Plot Selection (tabbed)')
-        self.dock_parameters = Dock('Parameters')
-        self.dock_console = Dock('Console')
+        self.dock_plot = Dock('Plot (tabbed)', size=(500,500))
+        self.dock_plot_selection = Dock('Plot Selection (tabbed)', size=(500,200))
+        self.dock_parameters = Dock('Parameters', size=(150,700))
+        self.dock_console = Dock('Console', size=(1200,150))
         
         self.area.addDock(self.dock_plot, 'right')
-        self.area.addDock(self.dock_plot_selection, 'left') 
+        self.area.addDock(self.dock_plot_selection, 'bottom', self.dock_plot) 
         self.area.addDock(self.dock_parameters, 'left')
         self.area.addDock(self.dock_console, 'bottom')
         
