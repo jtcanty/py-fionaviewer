@@ -20,7 +20,8 @@ class Plotter(PlotWidget):
         self.region = pg.LinearRegionItem()
         self.region.setZValue(10)
         self.addItem(self.region, ignoreBounds=True)
-        self.region.setRegion([1000, 2000])
+        self.setAutoVisible(y=True)
+        self.region.setRegion([10, 20])
         
         self.vLine = pg.InfiniteLine(angle=90, movable=False)
         self.hLine = pg.InfiniteLine(angle=0, movable=False)

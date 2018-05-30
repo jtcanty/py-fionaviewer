@@ -16,6 +16,7 @@ from pyqtgraph.dockarea import *
 from plotter import Plotter
 from parameters import Parameters
 from filebrowser import FileBrowser
+from fitter import Fitter
 
 
 class MainWindow(QMainWindow):
@@ -30,6 +31,7 @@ class MainWindow(QMainWindow):
         pyqtgraph.setConfigOption('background', 'w')
         
         self.file_browser = FileBrowser()
+        self.fitter = Fitter()
         
         self.createDocks()
         self.addWidgets()
@@ -82,12 +84,19 @@ class MainWindow(QMainWindow):
         exitAction.setShortcut('Ctrl+Q')
         exitAction.triggered.connect(self.closeApplication)
         
+        fitAction = QtGui.QAction('Fit', self)
+        fitAction.setShortcut('Ctrl+F')
+        fitAction.triggered.connect(self.fitter.fitTraceWithSIC)
+        
+        self.plotter.plotItem.ctrlMenu.addAction(fitAction)                         
+       
         menubar = self.menuBar()
         filemenu = menubar.addMenu('File')
         filemenu.addAction(openAction)
         filemenu.addAction(newAction)
         filemenu.addAction(saveAction)
         filemenu.addAction(exitAction)
+                                  
         
     def closeApplication(self):
         sys.exit()
