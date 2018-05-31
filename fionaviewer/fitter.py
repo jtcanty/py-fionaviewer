@@ -7,13 +7,15 @@ from scipy.optimize import curve_fit
 
 
 class Fitter():
-    
-    def __init__(self):
+    '''Time series fitting'''
+    def __init__(self, filebrowser):     
         self.currentStepIndices = []
         self.minDwellLength = 1
         self.numSteps = 0
-       
-    def fitTraceWithSIC(self, plotData):
+        self.filebrowser = filebrowser
+        self.filebrowser.dataChanged.connect(self.handlePlotData)
+
+    def fitTraceWithSIC(self):
         '''Fit the simulated traces using the SIC step-fitting algorithm
 
         Args:
@@ -26,16 +28,19 @@ class Fitter():
             fit (array): A numpy array of coordinates corresponding to the optimal SIC fit 
 
         '''
+        try:
+            self.plotData = self.yData           
+            self.plotDataLength = len(self.xData)
             
-        plotDataLength = len(plotData)
+        except AttributeError:
+            return
 
         # Calculate initial SIC value
-        currentSIC = self.getSchwarzInformationCriterion(numSteps, plotDataLength, plotData)
+        currentSIC = self.getSchwarzInformationCriterion()
 
         while True:
             # Compute SIC and add new step
-            (nextSIC, newStepIndex) = self.getLogLikelihood(plotData, currentStepIndices, 
-                                                       plotDataLength, numSteps)
+            (nextSIC, newStepIndex) = self.getLogLikelihood()
             if currentSIC >= nextSIC:
                 currentStepIndices.append(newStepIndex)
                 currentSIC = nextSIC
@@ -50,7 +55,7 @@ class Fitter():
         return (fitPlotData, currentStepIndices)
         
 
-    def getLogLikelihood(self, plotData, currentStepIndices, plotDataLength, numSteps):
+    def getLogLikelihood(self):
         ''' Calculate the minimum SIC statistic for all models with n steps. 
 
         Args:
@@ -59,24 +64,24 @@ class Fitter():
 
         '''
         
-        fitSIC = np.zeros(plotDataLength)
+        fitSIC = np.zeros(self.plotDataLength)
 
-        for step in range(0, plotDataLength):
-            if step in currentStepIndices:
+        for step in range(0, self.plotDataLength):
+            if step in self.currentStepIndices:
                 continue
 
             if step == 0:
                 continue
 
             # Set new step at current point and calculate global variance of all dwells.
-            temp = currentStepIndices + [step]
-            plotDataSplit = np.split(plotData, np.sort(temp))
-            dwellVariance = [np.var(plotDataSplit[j]) * len(plotDataSplit[j]) for j in range(0, len(plotDataSplit))]
-            globalVariance = (1 / plotDataLength) * sum(dwellVariance)
+            temp = self.currentStepIndices + [step]
+            plotDataSplit = np.split(self.plotData, np.sort(temp))
+            dwellVariance = [np.var(self.plotDataSplit[j]) * len(plotDataSplit[j]) for j in range(0, len(plotDataSplit))]
+            globalVariance = (1 / self.plotDataLength) * sum(dwellVariance)
 
             # Compute SIC score
             numSteps = len(plotDataSplit) - 1
-            SIC = self.getSchwarzInformationCriterion(numSteps, plotDataLength, plotData)
+            SIC = self.getSchwarzInformationCriterion()
             fitSIC[step] = SIC
 
         # Extract minimum SIC score and step position
@@ -88,7 +93,7 @@ class Fitter():
         return (minSIC, stepIndex)
 
 
-    def getSchwarzInformationCriterion(self, numSteps, plotDataLength, plotData):
+    def getSchwarzInformationCriterion(self):
         '''Compute the current SIC score
         
             (p + 2)log(n) + nlog(sigma^2)
@@ -99,22 +104,27 @@ class Fitter():
         
         '''
         
-        P = numSteps
-        N = plotDataLength
-        Variance = np.var(plotData)
+        P = self.numSteps
+        N = self.plotDataLength
+        Variance = np.var(self.plotData)
         SIC = (P + 2) * np.log(N) + N * np.log(Variance)
 
         return SIC
                 
     
-    def mergeSteps(self, plotData, currentStepIndices):
+    def mergeSteps(self):
         '''Construct the optimal SIC fit and plot it. Output the fit coordinates'''
         
-        fitSplit = np.split(plotData, np.sort(currentStepIndices))
+        fitSplit = np.split(self.plotData, np.sort(self.currentStepIndices))
         meanDwellValue = np.array([np.mean(fitSplit[i]) for i in range(0, len(fitSplit))])
         dwellFits = [meanDwellValue[j] * np.ones(len(fitSplit[j])) for j in range(0, len(fitSplit))]
         dataFit = np.concatenate(dwellFits)
 
         return dataFit 
+    
+    def handlePlotData(self, xData, yData):
+        self.xData = xData
+        self.yData = yData
+        
 
     

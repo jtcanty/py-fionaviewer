@@ -8,12 +8,11 @@ from PyQt5 import QtCore
 
 class Plotter(PlotWidget):
     '''Widget for plotting data'''
-    def __init__(self, filebrowser, data):
+    def __init__(self, filebrowser):
         PlotWidget.__init__(self)
         
         self.label = pg.LabelItem(justify='right')
-        self.data = data
-        self.pData = self.plot(self.data)
+        self.pData = self.plot()
         self.filebrowser = filebrowser
         self.filebrowser.dataChanged.connect(self.handleDataChanged)
         
@@ -37,7 +36,9 @@ class Plotter(PlotWidget):
         self.scene().sigMouseMoved.connect(self.mouseMoved)
     
     def handleDataChanged(self, xData, yData):
-        self.pData.setData(xData, yData)
+        self.xData = xData
+        self.yData = yData
+        self.pData.setData(self.xData, self.yData)
         
     def updateRegion(self):
         self.region.setZValue(10)
@@ -54,9 +55,9 @@ class Plotter(PlotWidget):
             mousePoint = self.vb.mapSceneToView(pos)
             index = int(mousePoint.x())
 
-            if index > 0 and index < len(self.data):
+            if index > 0 and index < len(self.xData):
                 self.label.setText("<span style='font-size: 12pt'>x=%0.1f, <span style='color: red'>y=%0.1f"
-                                   % (mousePoint.x(), self.data[index]))
+                                   % (mousePoint.x(), self.xData[index]))
                 self.vLine.setPos(mousePoint.x())
                 self.hLine.setPos(mousePoint.y())
                 

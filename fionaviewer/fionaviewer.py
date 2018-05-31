@@ -20,7 +20,7 @@ from fitter import Fitter
 
 
 class MainWindow(QMainWindow):
-
+    '''Main Application Window'''
     def __init__(self):
         QMainWindow.__init__(self)
 
@@ -31,11 +31,11 @@ class MainWindow(QMainWindow):
         pyqtgraph.setConfigOption('background', 'w')
         
         self.file_browser = FileBrowser()
-        self.fitter = Fitter()
+        self.fitter = Fitter(self.file_browser)
         
         self.createDocks()
         self.addWidgets()
-        self.createMenu()   
+        self.createMenu() 
 
     def createDocks(self):
         '''Create docks'''   
@@ -50,13 +50,11 @@ class MainWindow(QMainWindow):
         self.area.addDock(self.dock_console, 'bottom')
         
     def addWidgets(self):
-        '''Create widgets and add them to docks'''
-        data = np.random.normal(size=100)
-        
-        self.plotter = Plotter(self.file_browser, data)
+        '''Create widgets and add them to docks'''      
+        self.plotter = Plotter(self.file_browser)
         self.dock_plot.addWidget(self.plotter)
 
-        self.plot_selection = Plotter(self.file_browser, data)
+        self.plot_selection = Plotter(self.file_browser)
         self.dock_plot_selection.addWidget(self.plot_selection)
                            
         self.parameters = Parameters()
