@@ -1,3 +1,5 @@
+
+
 import numpy as np
 import pandas as pd
 import random
@@ -42,7 +44,7 @@ class Fitter():
             # Compute SIC and add new step
             (nextSIC, newStepIndex) = self.getLogLikelihood()
             if currentSIC >= nextSIC:
-                currentStepIndices.append(newStepIndex)
+                self.currentStepIndices.append(newStepIndex)
                 currentSIC = nextSIC
                 continue
 
@@ -50,7 +52,7 @@ class Fitter():
                 break
 
         # Assemble steps into a trace fit
-        fitPlotData = _merge_steps(plotData, currentStepIndices)
+        fitPlotData = self.mergeSteps()
 
         return (fitPlotData, currentStepIndices)
         
@@ -76,7 +78,7 @@ class Fitter():
             # Set new step at current point and calculate global variance of all dwells.
             temp = self.currentStepIndices + [step]
             plotDataSplit = np.split(self.plotData, np.sort(temp))
-            dwellVariance = [np.var(self.plotDataSplit[j]) * len(plotDataSplit[j]) for j in range(0, len(plotDataSplit))]
+            dwellVariance = [np.var(plotDataSplit[j]) * len(plotDataSplit[j]) for j in range(0, len(plotDataSplit))]
             globalVariance = (1 / self.plotDataLength) * sum(dwellVariance)
 
             # Compute SIC score
